@@ -6,19 +6,17 @@ This project automates the process of backing up configuration files from Cisco 
 
 ## 📁 Project Structure
 
+```
 ansible-backup-lab/
 ├── group_vars/
-│ └── cisco_switches.yml # Connection variables for Cisco switches
+│   └── cisco_switches.yml         # Connection variables for Cisco switches
 ├── inventory/
-│ └── hosts.yml # Inventory file with Cisco switch hostnames/IPs
+│   └── hosts.yml                  # Inventory file with Cisco switch hostnames/IPs
 ├── playbooks/
-│ └── backup_configs.yml # Main playbook to back up configs
-├── switch_backups/ # Final backup output directory (auto-created)
-└── README.md # This file
-
-yaml
-Copy
-Edit
+│   └── backup_configs.yml         # Main playbook to back up configs
+├── switch_backups/               # Final backup output directory (auto-created)
+└── README.md                      # This file
+```
 
 ---
 
@@ -40,19 +38,24 @@ Edit
 
 ```bash
 ansible-galaxy collection install cisco.ios
-⚙️ Setup Instructions
-1. Clone the Repository
-bash
-Copy
-Edit
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/YOUR_USERNAME/ansible-backup-lab.git
 cd ansible-backup-lab
-2. Define Inventory
-Edit inventory/hosts.yml:
+```
 
-yaml
-Copy
-Edit
+### 2. Define Inventory
+
+Edit `inventory/hosts.yml`:
+
+```yaml
 all:
   children:
     cisco_switches:
@@ -61,12 +64,13 @@ all:
           ansible_host: 192.168.1.10
         sw2:
           ansible_host: 192.168.1.11
-3. Set Credentials and Connection Method
-Edit group_vars/cisco_switches.yml:
+```
 
-yaml
-Copy
-Edit
+### 3. Set Credentials and Connection Method
+
+Edit `group_vars/cisco_switches.yml`:
+
+```yaml
 ansible_connection: network_cli
 ansible_network_os: cisco.ios.ios
 ansible_user: your_username
@@ -76,24 +80,31 @@ ansible_ssh_common_args: >
   -o PubkeyAuthentication=no
   -o KexAlgorithms=+diffie-hellman-group14-sha1
   -o HostKeyAlgorithms=+ssh-rsa
-🔐 Sensitive Info Warning: Consider using Ansible Vault to encrypt this file.
+```
 
-▶️ Running the Backup
-bash
-Copy
-Edit
+> 🔐 **Sensitive Info Warning**: Consider using Ansible Vault to encrypt this file.
+
+---
+
+## ▶️ Running the Backup
+
+```bash
 ansible-playbook playbooks/backup_configs.yml
-After execution, all switch configurations will be saved in the switch_backups/ folder with filenames like:
+```
 
-Copy
-Edit
+After execution, all switch configurations will be saved in the `switch_backups/` folder with filenames like:
+
+```
 switch_backups/
 ├── sw1.cfg
 ├── sw2.cfg
-✅ Example Output
-text
-Copy
-Edit
+```
+
+---
+
+## ✅ Example Output
+
+```text
 TASK [Ensure final backup directory exists] ***************************
 changed: [sw1 -> localhost]
 
@@ -105,12 +116,29 @@ ok: [sw1]
 
 TASK [Move fetched config to final switch_backups folder] *************
 changed: [sw1 -> localhost]
-🧹 Cleanup
+```
+
+---
+
+## 🧹 Cleanup
+
 The playbook automatically removes:
+- Temporary config files from `/tmp`
+- Backup files from the switch
+- Leftover folders like `playbooks/backup/` that shouldn't exist
 
-Temporary config files from /tmp
+---
 
-Backup files from the switch
+## 💡 Future Improvements
 
-Leftover folders like playbooks/backup/ that shouldn't exist
+- Add timestamps to backup filenames
+- Encrypt backups with Vault
+- Zip backups into an archive
+- Send Discord/Slack notifications
 
+---
+
+## 👤 Author
+
+**Sergio Cuevas**  
+🔗 [serginetworks.com](https://serginetworks.com)
