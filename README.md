@@ -47,7 +47,7 @@ ansible-galaxy collection install cisco.ios
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ansible-backup-lab.git
+git clone https://github.com/gamingsurge/ansible-backup-lab.git
 cd ansible-backup-lab
 ```
 
