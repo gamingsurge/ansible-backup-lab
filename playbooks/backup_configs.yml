@@ -1,0 +1,57 @@
+---
+- name: Backup Cisco IOS Configs and move to switch_backups folder
+  hosts: cisco_switches
+  gather_facts: no
+  vars_files:
+    - ../group_vars/cisco_switches.yml
+
+  vars:
+    temp_backup_dir: "/tmp"
+    final_backup_dir: "./switch_backups"
+
+  tasks:
+    - name: Ensure final backup directory exists
+      file:
+        path: "{{ final_backup_dir }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      run_once: true
+
+    - name: Backup running config on device
+      ios_config:
+        backup: yes
+      register: backup_result
+
+    - name: Debug backup file path
+      debug:
+        var: backup_result.backup_path
+
+    - name: Fetch config from device to temp dir
+      fetch:
+        src: "{{ backup_result.backup_path }}"
+        dest: "{{ temp_backup_dir }}/{{ inventory_hostname }}.cfg"
+        flat: yes
+
+    - name: Remove backup file from device
+      file:
+        path: "{{ backup_result.backup_path }}"
+        state: absent
+      when: backup_result.backup_path is defined
+
+    - name: Move fetched config to final switch_backups folder
+      command: >
+        mv {{ temp_backup_dir }}/{{ inventory_hostname }}.cfg {{ final_backup_dir }}/{{ inventory_hostname }}.cfg
+      delegate_to: localhost
+      run_once: false
+
+    - name: Remove incorrect backup folder inside playbooks directory
+      file:
+        path: "{{ playbook_dir }}/backup"
+        state: absent
+      delegate_to: localhost
+      run_once: true
+
+
+
+
