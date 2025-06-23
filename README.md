@@ -1,6 +1,8 @@
- Ansible Cisco Backup Lab
+# Ansible Cisco Backup Lab
 
 This project automates the process of backing up configuration files from Cisco IOS switches using Ansible.
+
+---
 
 ## 📁 Project Structure
 
@@ -35,9 +37,10 @@ Edit
 - Python 3.x
 - Network access to Cisco IOS devices
 - `cisco.ios` collection installed:
-  ```bash
-  ansible-galaxy collection install cisco.ios
-📦 Setup Instructions
+
+```bash
+ansible-galaxy collection install cisco.ios
+⚙️ Setup Instructions
 1. Clone the Repository
 bash
 Copy
@@ -73,14 +76,14 @@ ansible_ssh_common_args: >
   -o PubkeyAuthentication=no
   -o KexAlgorithms=+diffie-hellman-group14-sha1
   -o HostKeyAlgorithms=+ssh-rsa
-🛑 Sensitive Info Warning: Consider using Ansible Vault to encrypt this file.
+🔐 Sensitive Info Warning: Consider using Ansible Vault to encrypt this file.
 
 ▶️ Running the Backup
 bash
 Copy
 Edit
 ansible-playbook playbooks/backup_configs.yml
-Once complete, all switch configurations will be stored in the switch_backups/ folder with filenames like:
+After execution, all switch configurations will be saved in the switch_backups/ folder with filenames like:
 
 Copy
 Edit
@@ -88,19 +91,19 @@ switch_backups/
 ├── sw1.cfg
 ├── sw2.cfg
 ✅ Example Output
-bash
+text
 Copy
 Edit
-TASK [Ensure final backup directory exists] **************************
+TASK [Ensure final backup directory exists] ***************************
 changed: [sw1 -> localhost]
 
-TASK [Backup running config on device] *******************************
+TASK [Backup running config on device] ********************************
 ok: [sw1]
 
-TASK [Fetch config from device to temp dir] **************************
+TASK [Fetch config from device to temp dir] ***************************
 ok: [sw1]
 
-TASK [Move fetched config to final switch_backups folder] ************
+TASK [Move fetched config to final switch_backups folder] *************
 changed: [sw1 -> localhost]
 🧹 Cleanup
 The playbook automatically removes:
@@ -109,5 +112,5 @@ Temporary config files from /tmp
 
 Backup files from the switch
 
-Any leftover folders like playbooks/backup/ that shouldn't exist
+Leftover folders like playbooks/backup/ that shouldn't exist
 
